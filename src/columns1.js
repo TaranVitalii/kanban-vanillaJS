@@ -2,7 +2,7 @@
 const columns = [
   {
     id: 0,
-    title: 'ToDo',
+    title: 'To Do',
   },
   {
     id: 1,
@@ -16,13 +16,7 @@ const columns = [
 
 
 export function getColumns(){
-  let columnsArr = [];
-  for (let i=0 ; i<columns.length ; i++ ) { 
-    let columnsId = columns[i].id;
-  
-  columnsArr.push(columnsId);
- 
- }
-  return columnsArr;
+// возвращает массив колонок
+return columns;
 }
-
+window.getColumns=getColumns;

@@ -1,0 +1,22 @@
+html {
+	font-size: 1.2em;
+}
+#desk {
+
+	display:flex;
+
+}
+#desk div{
+border:1px solid silver;
+padding: 15px;
+font-weight:bold;
+background-color: #DADCDD;
+}
+#desk div p{
+border:1px solid silver;
+border-radius: 5px;
+padding: 30px;
+font-style:italic;
+background-color: #FCD8B7;
+box-shadow: 10px 5px 5px;
+}
