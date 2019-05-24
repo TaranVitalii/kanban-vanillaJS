@@ -4,7 +4,6 @@ html {
 #desk {
 
 	display:flex;
-
 }
 #desk div{
 border:1px solid silver;
@@ -19,4 +18,8 @@ padding: 30px;
 font-style:italic;
 background-color: #FCD8B7;
 box-shadow: 10px 5px 5px;
+}
+button {
+float: right;
+
 }

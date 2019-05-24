@@ -19,4 +19,3 @@ export function getColumns(){
 // возвращает массив колонок
 return columns;
 }
-window.getColumns=getColumns;
