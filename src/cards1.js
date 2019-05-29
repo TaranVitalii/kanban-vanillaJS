@@ -42,20 +42,56 @@ const cards = [
     column: 2,
   }
 ];
-
+// получение массива нужных карточек  по ид
 export function getCards(columnId){
 	return cards.filter(card => card.column === columnId);
 }
+// Создание карточек масива
+export function createCards(arrCards ,columnId){
+    let element = document.getElementsByClassName(`${columnId}`)[0];
+    
+  // создание столбца карточек
+     for(let i = 0; i < arrCards.length; i++ ){ 
+     let card = arrCards[i];
+     let cardId = card.id;
+     let cardTitle = arrCards[i].title;
+     let paragraph = document.createElement("p");
+     let cardTextHTML = document.createTextNode(cardTitle);
+     let idCardPlus10 = cardId;
+     paragraph.setAttribute("id", idCardPlus10);
+     paragraph.appendChild(cardTextHTML);
+     element.appendChild(paragraph);
 
+     // создание ивента для редактирование текстовой ноды
+     paragraph.addEventListener('click',()=>{
+       let idCards = paragraph.id;
+       let text =prompt("Update your Cards");
+       updateCards(idCards, text);
+     });
 
+     // создание иконки для удаление
+     let icon = document.getElementById(`${idCardPlus10}`);
+     let buttonDelete = document.createElement("i");
+     buttonDelete.setAttribute("class", "fas fa-trash-alt");
+     icon.appendChild(buttonDelete);
 
+     // создание ивент для удаления
+       buttonDelete.addEventListener('click',()=>{
+       event.stopPropagation();
+       let idCards = buttonDelete.parentElement.id;
+       removeCard(idCards);
 
-export function removeCard(id) {
-
-  document.getElementById(id).remove();
+       })
+     }
 }
 
 
+// удаление карточки
+export function removeCard(id) {
+  document.getElementById(id).remove();
+}
+
+// добавление карточки
 export function addCards( clientTitle, columnIdCreate ,element){
   let newId = cards.length+1;
   // новая карточка с нужными нам данными
@@ -92,6 +128,7 @@ export function addCards( clientTitle, columnIdCreate ,element){
 
 };
 
+// функция которая обновляет данные 
 export function updateCards(cardId , text){
                                     
   let searchElement =document.getElementById(cardId);// поиск элемента по нужному нам ид
