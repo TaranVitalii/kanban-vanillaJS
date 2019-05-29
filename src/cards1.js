@@ -43,7 +43,6 @@ const cards = [
   }
 ];
 
-
 export function getCards(columnId){
 	return cards.filter(card => card.column === columnId);
 }
@@ -52,7 +51,7 @@ export function getCards(columnId){
 
 
 export function removeCard(id) {
-  localStorage.removeItem("cards"+id);
+
   document.getElementById(id).remove();
 }
 
@@ -66,23 +65,39 @@ export function addCards( clientTitle, columnIdCreate ,element){
     column: columnIdCreate,
   }
   cards.push(newTask);
-      // поскольку стек пустой в момент когда работает онклик и 
-      // мы не можем создать данный элемент , то создаем непосредственно в функции
+      // поскольку цикл создания пустой то создаем непосредственно в функции
       let newCardPrompt = document.createElement("p");
       let cardTextHTML = document.createTextNode(newTask.title);
-      let idCard = newId;
       newCardPrompt.setAttribute("id", newId);
       newCardPrompt.appendChild(cardTextHTML);
       element.appendChild(newCardPrompt);
 
-}
+      // добавляем иконку удаления
+      let icon = document.getElementById(newId);
+      let buttonDelete = document.createElement("i");
+      buttonDelete.setAttribute("class", "fas fa-trash-alt");
+      icon.appendChild(buttonDelete);
+      // удаления тега
+          buttonDelete.addEventListener('click',()=>{
+            event.stopPropagation();
+            removeCard(newId);
+          })
+      // Обновление данных
+      newCardPrompt.addEventListener('click',()=>{
+        let text =prompt("Update your Cards");
+        updateCards(newId, text);
+      });
 
 
 
+};
 
-// локал не работает у меня как надо
-export function localStorageCards() {
-  for (let i = 0 ; i < cards.length ; i++){
-    let localValue = localStorage.setItem('cards'+i, JSON.stringify(cards[i]))
-  }
+export function updateCards(cardId , text){
+                                    
+  let searchElement =document.getElementById(cardId);// поиск элемента по нужному нам ид
+  searchElement.firstChild.remove();// удаление ноды которая находиться в диве
+                                   
+  let newNode = document.createTextNode(text); // создаем тектс который к нам зашёл с промта
+  searchElement.prepend(newNode); // и добавляем его ПЕРЕД Иконкой удаления
+
 }
