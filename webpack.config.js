@@ -13,6 +13,11 @@ module.exports = {
         test: /\.css$/,
         loaders: ["style-loader", "css-loader"]
       },
-      ]}
+      ]},
+  devServer: {
+    proxy: {
+      '/api': 'http://localhost:8089'
+    }
+  }
 
 }
