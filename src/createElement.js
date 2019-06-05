@@ -17,25 +17,25 @@ export function createColumns(columns){
   }};
 
 // =====================================================СARDS=================================
-export function createCards(arrCards ,columnId){
+export function createCard(objectCard){
+        let columnId = objectCard.column;
         // выбрали Родительский елемент для создания карточек
       let element = document.querySelector(`[data-column="${columnId}"]`);
-        // пробежали по полученому масиву и создали карточки
-        for(let i = 0; i < arrCards.length; i++ ){ 
-         let card = arrCards[i];
-         let cardId = card.id;
-         let cardTitle = arrCards[i].title;
-         let paragraph = document.createElement("p");
-         let headline = document.createElement("h");
-         paragraph.setAttribute("data-card", cardId);
-         headline.setAttribute("data-text",cardId);
-         headline.setAttribute("contenteditable",true);
-         headline.append(arrCards[i].title);
-         element.appendChild(paragraph);
-         paragraph.appendChild(headline)
+        
+        // создали карточки
+         let cardId = objectCard.id;
+         let cardTitle = objectCard.title;
+         let cardDiv = document.createElement("div");
+         let textDiv = document.createElement("div");
+         cardDiv.setAttribute("data-card", cardId);
+         cardDiv.setAttribute("draggable", true);
+         textDiv.setAttribute("data-text",cardId);
+         textDiv.setAttribute("contenteditable",true);
+         textDiv.append(objectCard.title);
+         element.appendChild(cardDiv);
+         cardDiv.appendChild(textDiv)
          // добавили иконку удаление
          let buttonDelete = document.createElement("i");
          buttonDelete.setAttribute("class", "fas fa-trash-alt");
-         paragraph.appendChild(buttonDelete);
-    }
+         cardDiv.appendChild(buttonDelete);
   };

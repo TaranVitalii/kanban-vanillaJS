@@ -4,9 +4,9 @@ html {
 #desk {
 
 	display:flex;
-
+	position: relative;
 }
-#desk div{
+[data-column] {
 border:1px solid silver;
 padding: 15px;
 font-weight:bold;
@@ -14,27 +14,30 @@ background-color: #DADCDD;
 position:relative;
 min-width: 230px;
 min-height: 400px;
+position:relative;
 }
-#desk div i{
+[data-column] i{
 	position: absolute;
 	top:20px;
 	right:20px;
 
 }
-#desk div p{
+[data-card] {
 border:1px solid silver;
 border-radius: 5px;
+margin-top:15px	;
 padding: 25px;
 font-style:italic;
 background-color: #FCD8B7;
 box-shadow: 10px 5px 5px;
 position:relative;
+
 }
 button {
 float: right;
 
 }
-#desk div p i {
+[data-card] i {
 position: absolute; 
 top:10px;
 right:10px;

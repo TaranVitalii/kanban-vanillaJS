@@ -1,34 +1,27 @@
 'user strict';
+import {createCard} from './createElement';
+import axios from 'axios';
 
-// возвращает массив карточек
-export async function getCards(columnId){
+// функция получает массив карточек
+export async function getCards(){
       const cardsURL = 'http://localhost:8089/api/card';
       const response = await fetch(cardsURL,{method:'GET'}) 
-      const cards = await response.json();
-	return cards.filter(card => card.column === columnId);
+      const cardsArr = await response.json();
+	return cardsArr;
 }
+// ===========================================================================================================
 
-
-
-export async function removeCard(event) {
-  let deleteClass = 'fas fa-trash-alt';
-  let targetDelete = event.target.getAttribute('class');
-  if(targetDelete === deleteClass){
-    let elementDelete = event.target.parentNode.getAttribute('data-card');
+// функция удаляет карточку с сервера и UI
+export async function removeCard(elementDelete) {
     const url = `http://localhost:8089/api/card/${elementDelete}`;
     const response = await fetch(url,{method:'DELETE',});
-    event.target.parentNode.remove();
+    document.querySelector(`[data-card="${elementDelete}"`).remove();
   };
+// ==============================================================================================================
 
-}
-
-export async function addCards(event){
+// функция добавляет карту на сервер и создает на UI
+export async function addCard(promptCard,targetColumn){
   const url = 'http://localhost:8089/api/card';
-  let addClass = "fa fa-plus-circle";
-  let targetAdd = event.target.getAttribute('class');
-  if(targetAdd===addClass){
-  let targetColumn = +event.target.parentNode.getAttribute('data-column');  
-  let promptCard = prompt('what you want to do?');
   let response = await fetch(url,{
     method:'POST',
     mode:'cors',
@@ -39,27 +32,27 @@ export async function addCards(event){
     headers:{ 
       "Accept":"application/json",
     "Content-Type":"application/json"}//увидил такие данные передавали с json понятно, а вот чарсет нужен ли вообще?
-  })
-  location.reload(); 
-  // можно сказать это ф5 в виде JS я знаю что можно как-то добавить мой елемент без перезагрузки
-   // ( дорисовать в дом плохой вариант я считаю, запушить я не могу так как мне надо id.)Буду рад за подсказку:сделать более ефективного?
- };
-}
-
-
-export async function updateCard(event){
- 
-  const url = `http://localhost:8089/api/card/${targetElementForId}`;
-  let targetNode = event.target.querySelector(`[data-text="${targetElementForId}"]`).firstChild;
-  let response = await fetch(url,{
-    method:'PATCH',
-    mode:'cors',
-    body: JSON.stringify({
-      title: targetNode,
-    }
-  ),
-    headers:{ 
-      "Accept":"application/json",
-    "Content-Type":"application/json"}//увидил такие данные передавали с json понятно, а вот чарсет нужен ли вообще?
   });
-  }
+  let data = await response.json();
+  createCard(data);
+
+ };
+// ==================================================================================================================
+                                          // ОБНОВЛЕНИЕ ДАННЫХ НА КАРТОЧКЕ
+// функция получает предыдущий title с сервера по нажатию esc 
+export async function getCardLastTittle(id) {
+  let cardResponse = await axios.get(`/api/card/${id}`)
+  let cardtitle = cardResponse.data.title;
+  return cardtitle;
+}
+// функция добавляет новые данные в ноду
+export function createNewNode(id,node){
+  let elementById = document.querySelector(`[data-text="${id}"]`);
+  elementById.textContent = node;
+}
+// отправляю на сервер обновленные данные ноды
+export async function updateCard(node, id) {
+  let editorNode = {title:`${node}`,};
+  let cardRequest = await axios.patch(`/api/card/${id}`,editorNode)
+}
+// ================================================================================================================
