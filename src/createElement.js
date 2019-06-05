@@ -13,7 +13,13 @@ export function createColumns(columns){
       // Добавили елемент с плюсом для добавления
       let buttonAdd = document.createElement("i");
       buttonAdd.setAttribute("class", "fa fa-plus-circle");
+      buttonAdd.setAttribute("data-add", 1)
       element.appendChild(buttonAdd);
+      // добавляем елемент для свертки
+      let rollup = document.createElement("i");
+      rollup.setAttribute("class","fas fa-angle-down")
+      rollup.setAttribute("data-rollup", 1)
+      element.append(rollup);
   }};
 
 // =====================================================СARDS=================================
@@ -38,4 +44,14 @@ export function createCard(objectCard){
          let buttonDelete = document.createElement("i");
          buttonDelete.setAttribute("class", "fas fa-trash-alt");
          cardDiv.appendChild(buttonDelete);
+         // добавление перетаскивание
+         cardDiv.addEventListener('dragstart', event=>{
+              let idColumnBefore = +event.currentTarget.closest('[data-column]').getAttribute('data-column');
+              let targetIdCard = +event.target.getAttribute('data-card');
+              let object = JSON.stringify({
+                idColumn:idColumnBefore,
+                targetId:targetIdCard
+              })
+              event.dataTransfer.setData("object", object);
+            });
   };

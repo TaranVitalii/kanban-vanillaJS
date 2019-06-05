@@ -34,7 +34,7 @@ export async function addCard(promptCard,targetColumn){
     "Content-Type":"application/json"}//увидил такие данные передавали с json понятно, а вот чарсет нужен ли вообще?
   });
   let data = await response.json();
-  createCard(data);
+  let card = createCard(data);
 
  };
 // ==================================================================================================================
@@ -55,4 +55,10 @@ export async function updateCard(node, id) {
   let editorNode = {title:`${node}`,};
   let cardRequest = await axios.patch(`/api/card/${id}`,editorNode)
 }
-// ================================================================================================================
+// // ================================================================================================================
+// ======================================Обновление Данных после drag'n'drop=========================================
+
+export async function updateColumnId(id,columnId){
+let editorColumnId = {column:`${columnId}`,};
+let cardRequest = await axios.patch(`/api/card/${id}`, editorColumnId)
+}
