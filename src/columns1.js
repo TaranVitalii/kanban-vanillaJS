@@ -1,4 +1,3 @@
-'user strict';
 // функция просто возвращает массив колонок
 export  async function getColumns(){
        const columnsURL = 'http://localhost:8089/api/column';

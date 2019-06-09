@@ -1,15 +1,14 @@
-'user strict';
 
 import {getCards ,
 		addCard ,
-		removeCard,
 		updateCard,
-		getCardLastTittle,
-		createNewNode} from './cards1' ;
+		getCardLastTittle} from './cards1' ;
 import { getColumns} from './columns1' ;
 
 import {createColumns,
-		createCard} from './createElement';
+		createCard,
+		removeCard,
+		updateCardText} from './createElement';
 
 import styles from './css.css';
 import {dragStart,
@@ -31,8 +30,14 @@ async function buildAndCreate() {
 
 	let elementDesk = document.getElementById('desk');
 
-		// узнаю по какой кнопке нажали и передаю данные в updateCard
-	elementDesk.addEventListener('keydown', async event => {
+	//ВОЗВРАЩЕНИЕ ПРЕДДЫДУЩЕГО ЗНАЧЕНИЯ ПОСЛЕ СНЯТИЯ ФОКУСА С ЕЛЕМЕНТА
+	elementDesk.addEventListener('blur',async event =>{
+		let cardId = +event.target.closest('[data-card]').getAttribute('data-card');
+		let nodeBeforeEditing = await getCardLastTittle(cardId);
+			updateCardText(cardId,nodeBeforeEditing);
+	},true);
+	// узнаю по какой кнопке нажали и передаю данные в updateCard
+	elementDesk.addEventListener('keydown', async event => {	
 		if(event.keyCode === 13){
 			event.preventDefault();
 			let targetElementText = event.target.textContent;
@@ -45,23 +50,22 @@ async function buildAndCreate() {
 					if(event.keyCode === 27){
 						let targetElementId1 = +event.target.getAttribute('data-text');
 						let nodeBeforeEditing = await getCardLastTittle(targetElementId1);
-							createNewNode(targetElementId1,nodeBeforeEditing);
+							updateCardText(targetElementId1,nodeBeforeEditing);
 					};
 	});
 	// узнаю по какому елементу кликнули и передаю данные в removeCard
 	elementDesk.addEventListener('click', event =>{
-		let deleteClass = 'fas fa-trash-alt';
-	  	let targetDelete = event.target.getAttribute('class');
-		  	if(targetDelete === deleteClass){
+	  	let targetDelete = event.target.getAttribute('data-remove');
+	  	
+		  	if(targetDelete){
 			    let elementDelete = +event.target.closest('[data-card]').getAttribute('data-card');
 		    		removeCard(elementDelete);
 			}
 	});
 		// узнаю по какому елементу кликнули и передаю данные в addCards
 	elementDesk.addEventListener('click', event => {
-		  let addClass = "fa fa-plus-circle";
-		  let targetAdd = event.target.getAttribute('class');
-		  	if(targetAdd===addClass){ 
+		  let targetAdd = event.target.getAttribute('data-add');
+		  	if(targetAdd){ 
 			  let targetColumn = +event.target.closest('[data-column]').getAttribute('data-column');
 			  let promptCard = prompt('what you want to do?');
 				if(promptCard&&promptCard.length){ 
@@ -71,12 +75,8 @@ async function buildAndCreate() {
 	});
 // ======================================Drag'n'Drop=========================================================
 	// выделили колонки и карточки
-	let elementCard = document.querySelectorAll('[data-card]');
+	let cardId = document.querySelectorAll('[data-card]');
 	let elementColumn = document.querySelectorAll('[data-column]');
-	// добавили ивент на каждые елемент который драгается
-	elementCard.forEach(elem=>{
-		elem.addEventListener('dragstart',dragStart);
-	});
 	// добавили ивент на каждые елемент на каждый елемент родитель
 	elementColumn.forEach(elemParent=>{
 		elemParent.addEventListener('dragover',dragOver); 

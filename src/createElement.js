@@ -1,3 +1,4 @@
+import {dragStart} from './Drag\'n\'Drop';
 // ================================================COLUMNS================================
 export function createColumns(columns){
   // выбрали Родительский елемент для создания колонки
@@ -13,12 +14,12 @@ export function createColumns(columns){
       // Добавили елемент с плюсом для добавления
       let buttonAdd = document.createElement("i");
       buttonAdd.setAttribute("class", "fa fa-plus-circle");
-      buttonAdd.setAttribute("data-add", 1)
+      buttonAdd.setAttribute("data-add", true)
       element.appendChild(buttonAdd);
       // добавляем елемент для свертки
       let rollup = document.createElement("i");
       rollup.setAttribute("class","fas fa-angle-down")
-      rollup.setAttribute("data-rollup", 1)
+      rollup.setAttribute("data-rollup", columnId)
       element.append(rollup);
   }};
 
@@ -43,15 +44,22 @@ export function createCard(objectCard){
          // добавили иконку удаление
          let buttonDelete = document.createElement("i");
          buttonDelete.setAttribute("class", "fas fa-trash-alt");
+         buttonDelete.setAttribute("data-remove", true);
+
          cardDiv.appendChild(buttonDelete);
          // добавление перетаскивание
-         cardDiv.addEventListener('dragstart', event=>{
-              let idColumnBefore = +event.currentTarget.closest('[data-column]').getAttribute('data-column');
-              let targetIdCard = +event.target.getAttribute('data-card');
-              let object = JSON.stringify({
-                idColumn:idColumnBefore,
-                targetId:targetIdCard
-              })
-              event.dataTransfer.setData("object", object);
-            });
+         cardDiv.addEventListener('dragstart',dragStart);
   };
+
+  // ===================================================================
+  // функция удаляет карточку с сервера и UI
+export async function removeCard(cardId) {
+    const url = `http://localhost:8089/api/card/${cardId}`;
+    const response = await fetch(url,{method:'DELETE',});
+    document.querySelector(`[data-card="${cardId}"`).remove();
+  };
+  // функция добавляет новые данные в ноду
+export function updateCardText(id,node){
+  let elementById = document.querySelector(`[data-text="${id}"]`);
+  elementById.textContent = node;
+}
