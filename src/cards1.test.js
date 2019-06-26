@@ -6,14 +6,7 @@ import {createCard} from './createElement';
 import axios from 'axios';
 
 // =====================================================================Values=====================================
-function mockFetch(data,stage){//замокали фетч
-	
-	if(stage === 'resolve'){
-	return jest.fn().mockResolvedValueOnce(data);
-	}else {
-	return jest.fn().mockRejectedValue(new Error('Async error'));
-	}
-};
+
 
 const dataColumn =[{
 	    	column:0,
@@ -29,17 +22,7 @@ const dataJSON = {
 	ok:true,
 	json:()=>dataColumn,
 };
-const cardValue = {
-	ok:true,
-	json:()=>{
-		let data ={
-        title: 'hello',
-     	column: 0,
-     	id:4
-     	}
-     	return data;
-  	},
-};
+
 const cardData = {
 	id:0,
 	title:'todo something',
@@ -49,64 +32,46 @@ const cardData = {
 
 // тест функции
 describe('getCards',()=>{
-		// тест на обычные условия
-		test('getCards function normal work', async () => {
-			global.fetch = mockFetch(dataJSON,'resolve');
+	const err = new Error('Async error');
+		let fetchMock;
+		beforeEach(()=> { 
+			fetchMock = function(data,stage){//замокали фетч
+				switch(stage){
+					case 'resolve':
+						return jest.fn(() => Promise.resolve(data));
+					break;
+					case 'reject':
+				 		return jest.fn(() => Promise.reject(err.message));
+				 	break;
+				}
+			};
+		});
+		// тест на resolve условия
+		it('getCards function resolve promise', async () => {
+			const cardValue = {
+				ok:true,
+				json:()=>{
+					let data ={
+			        title: 'hello',
+			     	column: 0,
+			     	id:4
+			     	}
+			     	return data;
+			  	},
+			};
+			global.fetch = fetchMock(cardValue,'resolve');
 
 			const data = await getCards();
 
-			expect(data).toBe(dataColumn);
+			expect(data).toEqual(cardValue.json());
 		});
 
-				// // тест на условия reject
-				// test('function reject promise', async () => { //второй тест не работает, показывает ошибку на слово new, и пишет Async error
+		// // тест на условия reject
+		it('function reject promise', async () => {  // почему мне пишет ошибку на it????
 
-				// 	global.fetch = mockFetch(null,'reject');
+			global.fetch = fetchMock(null,'reject');
 
-				//   	const data = await getCards();
-				//   	expect(data).toBe('Async error');
-				// });
+		  	const data = await getCards();
+		  	expect(data).toEqual(err.message);
+		});
 });
-// ==========================================================================addCards=======================================================
-// describe('addCards',()=>{
-// 	test('addCards with request',async()=>{
-// 		global.fetch = mockFetch(cardValue,'resolve');
-// 		window.createCard = jest.fn();// жест начинает тестить функцию которая внутри addCards и ни как не получается её замокать.(не знаю что делать)
-// 		const data = await addCard();
-// 		expect(data).toBe(cardValue);
-// 	})
-// });
-// ===================================================getCardsLastTittle=========================================================
-describe('getCardLastTittle',()=>{
-	test('getCardLastTittle', async ()=>{
-		axios.get = jest.fn().mockReturnValue(Promise.resolve({data:cardData}));
-		const result = await getCardLastTittle();
-		expect(result).toBe('todo something');
-	});
-	// test('getCardLastTittle', async ()=>{           // тоже не знаю что делать с ошибкой
-	// 	 const err = new Error();
- // 			   err.code = 404;
-	// 	axios.get = jest.fn().mockReturnValue(Promise.reject(err).rejects.toHaveProperty('code', 404));
-	// 	const result = await getCardLastTittle();
-	// 	expect(result).toBe(404);
-	// });
-})
-// ===================================================updateCard=========================================================
-
-describe('updateCard',()=>{
-	test('with method patch', async ()=>{
-		let textValue = 'hello';
-		cardData.title = textValue;
-		axios.patch = jest.fn().mockReturnValue(Promise.resolve({data:cardData}));
-		const result = await getCardLastTittle();
-		expect(result).toBe(textValue);
-	});
-	test('with method patch', async ()=>{
-		let textValue;
-		cardData.title = textValue;
-		axios.patch = jest.fn().mockReturnValue(Promise.resolve({data:cardData}));
-		const result = await getCardLastTittle();
-		expect(result).toBe(undefined);
-	});
-
-})
