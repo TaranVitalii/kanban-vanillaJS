@@ -63,13 +63,13 @@ async function buildAndCreate() {
 			}
 	});
 		// узнаю по какому елементу кликнули и передаю данные в addCards
-	elementDesk.addEventListener('click', event => {
+	elementDesk.addEventListener('click',async event => {
 		  let targetAdd = event.target.getAttribute('data-add');
 		  	if(targetAdd){ 
 			  let targetColumn = +event.target.closest('[data-column]').getAttribute('data-column');
 			  let promptCard = prompt('what you want to do?');
 				if(promptCard&&promptCard.length){ 
-				  	addCard(promptCard,targetColumn);
+				  	createCard(await addCard(promptCard,targetColumn));
 				};
 			};
 	});

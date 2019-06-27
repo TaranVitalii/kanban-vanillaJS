@@ -1,4 +1,3 @@
-import {createCard} from './createElement';
 import axios from 'axios';
 
 // функция получает массив карточек
@@ -26,8 +25,7 @@ export async function addCard(cardText,columnId){
     "Content-Type":"application/json"}
   });
   let data = await response.json();
-  let card = createCard(data);
-
+  return data
  };
 // ==================================================================================================================
                                           // ОБНОВЛЕНИЕ ДАННЫХ НА КАРТОЧКЕ
