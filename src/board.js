@@ -32,7 +32,7 @@ async function buildAndCreate() {
 
 	//ВОЗВРАЩЕНИЕ ПРЕДДЫДУЩЕГО ЗНАЧЕНИЯ ПОСЛЕ СНЯТИЯ ФОКУСА С ЕЛЕМЕНТА
 	elementDesk.addEventListener('blur',async event =>{
-		let cardId = +event.target.closest('[data-card]').getAttribute('data-card');
+		let cardId = event.target.closest('[data-card]').getAttribute('data-card');
 		let nodeBeforeEditing = await getCardLastTittle(cardId);
 			updateCardText(cardId,nodeBeforeEditing);
 	},true);
@@ -42,13 +42,12 @@ async function buildAndCreate() {
 			event.preventDefault();
 			let targetElementText = event.target.textContent;
 				if(targetElementText && targetElementText.length){
-				let targetElementId = +event.target.getAttribute('data-text');
-				console.log(targetElementId);
+				let targetElementId = event.target.getAttribute('data-text');
 				updateCard(targetElementText,targetElementId);
 				};
 		};
 					if(event.keyCode === 27){
-						let targetElementId1 = +event.target.getAttribute('data-text');
+						let targetElementId1 = event.target.getAttribute('data-text');
 						let nodeBeforeEditing = await getCardLastTittle(targetElementId1);
 							updateCardText(targetElementId1,nodeBeforeEditing);
 					};
@@ -58,7 +57,7 @@ async function buildAndCreate() {
 	  	let targetDelete = event.target.getAttribute('data-remove');
 	  	
 		  	if(targetDelete){
-			    let elementDelete = +event.target.closest('[data-card]').getAttribute('data-card');
+			    let elementDelete = event.target.closest('[data-card]').getAttribute('data-card');
 		    		removeCard(elementDelete);
 			}
 	});
@@ -66,7 +65,7 @@ async function buildAndCreate() {
 	elementDesk.addEventListener('click',async event => {
 		  let targetAdd = event.target.getAttribute('data-add');
 		  	if(targetAdd){ 
-			  let targetColumn = +event.target.closest('[data-column]').getAttribute('data-column');
+			  let targetColumn = event.target.closest('[data-column]').getAttribute('data-column');
 			  let promptCard = prompt('what you want to do?');
 				if(promptCard&&promptCard.length){ 
 				  	createCard(await addCard(promptCard,targetColumn));

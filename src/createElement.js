@@ -30,7 +30,7 @@ export function createCard(objectCard){
       let element = document.querySelector(`[data-column="${columnId}"]`);
         
         // создали карточки
-         let cardId = objectCard.id;
+         let cardId = objectCard._id;
          let cardTitle = objectCard.title;
          let cardDiv = document.createElement("div");
          let textDiv = document.createElement("div");

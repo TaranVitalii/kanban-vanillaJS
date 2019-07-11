@@ -2,7 +2,7 @@ import {updateColumnId} from './cards1' ;
 
 export function dragStart(event){
 let idColumnBefore = +event.currentTarget.closest('[data-column]').getAttribute('data-column');
-let targetIdCard = +event.target.getAttribute('data-card');
+let targetIdCard = event.target.getAttribute('data-card');
 let object = JSON.stringify({
         idColumn:idColumnBefore,
         targetId:targetIdCard

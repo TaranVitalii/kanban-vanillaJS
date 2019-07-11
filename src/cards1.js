@@ -5,6 +5,7 @@ export async function getCards(){
       const cardsURL = 'http://localhost:8089/api/card';
       const response = await fetch(cardsURL,{method:'GET'}) 
       const cardsArr = await response.json();
+      console.log(cardsArr)
 	return cardsArr;
 }
 
@@ -39,7 +40,9 @@ export async function getCardLastTittle(id) {
 // отправляю на сервер обновленные данные ноды
 export async function updateCard(node, id) {
   let editorNode = {title:node,};
+  console.log(editorNode);
   let cardRequest = await axios.patch(`/api/card/${id}`,editorNode)
+  
 }
 // // ================================================================================================================
 // ======================================Обновление Данных после drag'n'drop=========================================
