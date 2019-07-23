@@ -1,4 +1,3 @@
-
 import {getCards ,
 		addCard ,
 		updateCard,
@@ -15,7 +14,6 @@ import {dragStart,
 		dragOver,
 		onDrop} from './Drag\'n\'Drop';
 import {rollUp} from './localStorage';
-
 
 
 async function buildAndCreate() {	

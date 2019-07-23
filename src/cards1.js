@@ -5,7 +5,6 @@ export async function getCards(){
       const cardsURL = 'http://localhost:8089/api/card';
       const response = await fetch(cardsURL,{method:'GET'}) 
       const cardsArr = await response.json();
-      console.log(cardsArr)
 	return cardsArr;
 }
 
