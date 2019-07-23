@@ -1,11 +1,9 @@
 import {updateColumnId} from './cards1' ;
 import io from 'socket.io-client';
 
-const socket = io("ws://localhost:8089/", { transports: ["websocket"] });
+const socket = io.connect("http://localhost:8089/", { transports: ["websocket"] });
 
-socket.on("connect", () => { 
-	socket.on("message",data =>console.log(data))
-})
+
 
 export function dragStart(event){
 let idColumnBefore = +event.currentTarget.closest('[data-column]').getAttribute('data-column');
@@ -28,9 +26,19 @@ export async function onDrop(event){
 		let data = JSON.parse(event.dataTransfer.getData("object"));
 			if(data.idColumn != targetColumn){
 				let cardFromSetData = document.querySelector(`[data-card="${data.targetId}`);
-				let response = await updateColumnId(data.targetId, targetColumn);
-				if(response.status ===200){
+				socket.emit("move",{
+					cardId: data.targetId,
+					editColumn:targetColumn
+				})
+				// if(response.status ===200){
 					this.append(cardFromSetData);
-				};
+				// };
 			};
+			// if(data.idColumn != targetColumn){
+			// 	let cardFromSetData = document.querySelector(`[data-card="${data.targetId}`);
+			// 	let response = await updateColumnId(data.targetId, targetColumn);
+			// 	if(response.status ===200){
+			// 		this.append(cardFromSetData);
+			// 	};
+			// };
 		}
