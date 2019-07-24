@@ -15,6 +15,9 @@ import {dragStart,
 		onDrop} from './Drag\'n\'Drop';
 import {rollUp} from './localStorage';
 
+import io from 'socket.io-client';
+
+const socket = io.connect("ws://localhost:8089/", { transports: ["websocket"] });
 
 async function buildAndCreate() {	
 	const columnArr = await getColumns();
@@ -80,7 +83,12 @@ async function buildAndCreate() {
 	});
 	// добавили ивент на каждые елемент на каждый елемент родитель
 	elementColumn.forEach(elemParent=>{
-		elemParent.addEventListener('drop' , onDrop);
+		elemParent.addEventListener('drop' ,e =>{
+			console.log('hello')
+			const { cardIdTarget, targetColumn} = onDrop(e);
+			let editorColumnId = {column:targetColumn,}
+			socket.emit('move', {cardIdTarget, editorColumnId})
+		});
 	});
 // ========================localStorage=================================================
 	elementDesk.addEventListener('click', rollUp);
